@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="">
+<head>
+    <meta charset="UTF-8">
+<link href="maps-icon.png" rel="icon">
+    <title>Google Maps API</title>
+    <link href="google-maps.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<div id="box">
+    <div id="heading" ><h1 id="a" style="text-align: center;font-size:40px;">GOOGLE MAP LIVE WEATHER</h1></div>
+    <div id="b"><button class="button" id="btn2">DELETE ALL MARKER INFO</button>
+           &nbsp; <button class="button" id="btn1">DELETE ALL MARKERS</button></h2><br></div>
+    <br><br><br><div id="map"></div>
+    <div id="instruct" >
+        <h1>INSTRUCTIONS:</h1>
+        <h2>1)Click once to add a pointer & see the weather and Temp of the place<br>
+            <br>2)Click twice to zoom-in along with it
+       <br><br>3)Click on pointer to view its weather</h2>
+        
+    </div>
+<div id="footer">
+  <p id="a">Made By -Milind Bajaj</p>
+</div>
+</div>
+
+</body>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe1a-lwZPqxJ9NHZ56iBd4M6CBMcavJ4U&callback=initMap">
+</script>
+<script>
+let markers=[],i=0, infos=[],k=0;
+
+$('#btn1').on('click',function(){
+    for(let j=0;j<i;j++)
+    { markers[j].setMap(null);                    }
+
+})
+$('#btn2').on('click',function(){
+    for(let j=0;j<k;j++)
+    { infos[j].close();   }
+
+})
+
+
+function initMap() {
+
+    var map = new google.maps.Map(document.getElementById('map'), {      //par1=mapCanvas par2=mapOptions
+        zoom: 7,
+        center: {lat: 21.827074, lng: 75.615093},
+        mapTypeId: google.maps.MapTypeId.HYBRID,
+        disableDefaultUI: true,
+    });
+    var marker = new google.maps.Marker({
+        position:{lat: 21.827074, lng: 75.615093},
+        map: map,
+        animation: google.maps.Animation.DROP
+    });
+    var infowindow = new google.maps.InfoWindow({
+
+        content: "KHARGONE"
+    });
+    infowindow.open(map, marker);
+
+    map.addListener('click', function (e) {
+        var marker = new google.maps.Marker({
+            position: e.latLng, 
+            map: map,
+            animation: google.maps.Animation.BOUNCE});
+
+        for(let j=0;j<i;j++)
+        {   markers[j].setAnimation(google.maps.Animation.DROP);}
+        markers[i]=marker;i++;
+
+        //for(let p=0;p<k;p++)
+        //{  infos[p].close();}
+
+        map.panTo(e.latLng);
+
+        var text="";
+        let URL = `https://api.weatherbit.io/v2.0/current?&lat=${e.latLng.lat()}&lon=${e.latLng.lng()}&key=da334a7104474c598181ccae11d00c02`;
+        $.ajax({
+            url: URL,
+            dataType: 'jsonp',
+            success: function (info)
+            {
+                text=info.data[0].weather.description;
+                text1=info.data[0].city_name;
+                text2=info.data[0].temp;
+                var infowindow = new google.maps.InfoWindow({
+
+                    content: `${text1},Weather=${text},Temp=${text2}`
+                });
+                infowindow.open(map, marker);
+                infos[k]=infowindow;k++;
+                marker.addListener('click',function(){
+                    infowindow.open(map, marker);
+
+                });
+
+            }
+        })
+    });
+
+
+}
+</script>
+</html>
