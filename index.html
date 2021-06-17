@@ -92,8 +92,8 @@ function initMap() {
                 text2=info.data[0].temp;
                 var infowindow = new google.maps.InfoWindow({
 
-                    content: `${text1}\
-                              Weather=${text}\
+                    content: `${text1}<br />
+                              Weather=${text}<br />
                               Temp=${text2}°C`
                 });
                 infowindow.open(map, marker);
