@@ -47,7 +47,7 @@ function initMap() {
         map.panTo(e.latLng);
 
         var text="";
-        let URL = `https://api.weatherbit.io/v2.0/current?&lat=${e.latLng.lat()}&lon=${e.latLng.lng()}&key=da334a7104474c598181ccae11d00c02`;
+        let URL = `https://api.weatherbit.io/v2.0/current?&lat=${e.latLng.lat()}&lon=${e.latLng.lng()}&key={your_key}`;
         $.ajax({
             url: URL,
             dataType: 'jsonp',
